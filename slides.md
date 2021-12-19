@@ -36,6 +36,12 @@ info: |
 - Lately, I use GraphQL ([graphql-ruby](https://github.com/rmosolgo/graphql-ruby)).
 
 ---
+layout: center
+---
+
+## Can you explain what mocks, stubs, and spies are?
+
+---
 
 ## Martin Fowler says...
 
@@ -91,6 +97,7 @@ Test with stubs.
 describe 'SomeClient#request'
   before do
     allow(client).to receive(:some_lib).with(no_args).and_return(some_lib)
+    # Stub some_lib's behavior and can avoid requesting actually.
     allow(some_lib).to receive(:request).with(no_args).and_return(expected_boby)
   end
 
@@ -129,7 +136,8 @@ describe 'SomeClient#request'
   subject { client.request }
 
   it do
-    expect(some_lib).to receive(:request).with(no_args).and_return(expected_boby).once # Ensure it's really called expectedly.
+    # Ensure whether it's really called once expectedly.
+    expect(some_lib).to receive(:request).with(no_args).and_return(expected_boby).once
     is_expected.to eq expected_json
   end
 ```
@@ -142,6 +150,14 @@ layout: center
 
 ---
 
+<br />
+
+In [https://relishapp.com/rspec/rspec-mocks/v/3-6/docs/basics/spies](https://relishapp.com/rspec/rspec-mocks/v/3-6/docs/basics/spies), Spies are described:
+
+> Message expectations put an example's expectation at the start, before you've invoked the code-under-test. Many developers prefer using an act-arrange-assert (or given-when-then) pattern for structuring tests. Spies are an alternate type of test double that support this pattern by allowing you to expect that a message has been received after the fact, using have_received.
+
+---
+
 Test with spies.
 
 <br />
@@ -151,7 +167,7 @@ describe 'SomeClient#request'
   before { allow(client).to receive(:some_lib).with(no_args).and_return(some_lib)  }
 
   let(:client) { SomeClient.new }
-  let(:some_lib) { instance_spy(SomeLib) }
+  let(:some_lib) { instance_spy(SomeLib) } # instance_double can be also used :)
   let(:expected_body) { ... }
   let(:expected_json) { JSON.parse expected_body }
 
@@ -159,6 +175,7 @@ describe 'SomeClient#request'
 
   it do
     is_expected.to eq expected_json
+    # Check whether it was really called once expectedly.
     expect(some_lib).to have_received(:request).with(no_args).and_return(expected_boby).once
   end
 end
@@ -184,15 +201,15 @@ end
 
 <br />
 
-I found an article: [https://www.futurelearn.com/info/blog/stubs-mocks-spies-rspec](https://www.futurelearn.com/info/blog/stubs-mocks-spies-rspec), and there is what I would like to say:
-
-<br />
-
-> Stub – an object providing canned responses to specified messages.
-
-> Mock – an object that is given a specification of the messages that it must receive (or not receive) during the test if the test is to pass.
-
-> Spy – an object that records all messages it receives (assuming it is allowed to respond to them), allowing the messages it should have received to be asserted at the end of a test.
+- stub
+  - Provides hard-coded values for method calls.
+  - Always returns the same output, regardless of the input.
+- spy
+  - A stub that records information based on calls.
+  - With spies, we can verify which method was called, with which arguments, when, and how many times.
+- mock
+  - mock is similar to stub, but represents the specification of the call at tests.
+  - An exception can be thrown when a call is not expected.
 
 ---
 layout: center
