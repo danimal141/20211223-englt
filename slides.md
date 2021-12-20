@@ -16,7 +16,7 @@ info: |
   Learn more at [Sli.dev](https://sli.dev)
 ---
 
-# I completely understand mocks, stubs, and spies.
+# I know everything about mocks, stubs, and spies.
 
 <div class="m-20">
   <p>@danimal141</p>
