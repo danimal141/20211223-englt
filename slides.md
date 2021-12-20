@@ -16,7 +16,7 @@ info: |
   Learn more at [Sli.dev](https://sli.dev)
 ---
 
-# Can you explain what mocks, stubs, and spies are?
+# I completely understand mocks, stubs, and spies.
 
 <div class="m-20">
   <p>@danimal141</p>
@@ -39,7 +39,13 @@ info: |
 layout: center
 ---
 
-## Can you explain what mocks, stubs, and spies are?
+## What mocks, stubs, and spies are?
+
+---
+layout: center
+---
+
+<img src="/kanzen_rikai.jpeg" width=800 />
 
 ---
 
