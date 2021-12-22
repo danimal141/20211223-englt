@@ -16,11 +16,11 @@ info: |
   Learn more at [Sli.dev](https://sli.dev)
 ---
 
-# I know everything about mocks, stubs, and spies.
+# I know everything about mocks, stubs, and spies in RSpec
 
 <div class="m-20">
   <p>@danimal141</p>
-  <p>2021/12/23 English Tech LT #2</p>
+  <p>2021/12/23 English Tech LT#2</p>
 </div>
 
 ---
@@ -39,27 +39,17 @@ info: |
 layout: center
 ---
 
-## What mocks, stubs, and spies are?
+## See difference between about mocks, stubs, and spies using [rspec-mocks](https://github.com/rspec/rspec-mocks)!
 
 ---
 layout: center
 ---
 
-<img src="/kanzen_rikai.jpeg" width=800 />
-
----
-
-## Martin Fowler says...
+## Japanese kanzen rikai!
 
 <br />
 
-In [https://martinfowler.com/articles/mocksArentStubs.html](https://martinfowler.com/articles/mocksArentStubs.html), Mr. Martin Fowler says:
-
-> Stubs provide canned answers to calls made during the test, usually not responding at all to anything outside what's programmed in for the test.
-
-> Spies are stubs that also record some information based on how they were called. One form of this might be an email service that records how many messages it was sent.
-
-> Mocks are what we are talking about here: objects pre-programmed with expectations which form a specification of the calls they are expected to receive.
+<img src="/kanzen_rikai.jpeg" width=800 />
 
 ---
 layout: center
@@ -108,12 +98,16 @@ describe 'SomeClient#request'
   end
 
   let(:client) { SomeClient.new }
+  # instance_double:
+  #   - Can stub methods.
+  #   - If you try to stub the undefined method, it would raise an error.
   let(:some_lib) { instance_double(SomeLib) }
   let(:expected_body) { ... }
   let(:expected_json) { JSON.parse expected_body }
 
   subject { client.request }
 
+  # call the subject.
   it { is_expected.to eq expected_json }
 end
 ```
@@ -142,8 +136,11 @@ describe 'SomeClient#request'
   subject { client.request }
 
   it do
-    # Ensure whether it's really called once expectedly.
+    # ensure whether it's really called once expectedly.
+    # set message expectations
+    # call the expectation first.
     expect(some_lib).to receive(:request).with(no_args).and_return(expected_boby).once
+    # call the subject.
     is_expected.to eq expected_json
   end
 ```
@@ -158,9 +155,9 @@ layout: center
 
 <br />
 
-In [https://relishapp.com/rspec/rspec-mocks/v/3-6/docs/basics/spies](https://relishapp.com/rspec/rspec-mocks/v/3-6/docs/basics/spies), Spies are described:
+In [rspec-mocks/v/3-6/docs/basics/spies](https://relishapp.com/rspec/rspec-mocks/v/3-6/docs/basics/spies), Spies are described as follows:
 
-> Message expectations put an example's expectation at the start, before you've invoked the code-under-test. Many developers prefer using an act-arrange-assert (or given-when-then) pattern for structuring tests. Spies are an alternate type of test double that support this pattern by allowing you to expect that a message has been received after the fact, using have_received.
+> Spies are an alternate type of test double that support this pattern by allowing you to expect that a message has been received after the fact, using have_received.
 
 ---
 
@@ -170,36 +167,24 @@ Test with spies.
 
 ```ruby
 describe 'SomeClient#request'
-  before { allow(client).to receive(:some_lib).with(no_args).and_return(some_lib)  }
+  before { allow(client).to receive(:some_lib).with(no_args).and_return(some_lib) }
 
   let(:client) { SomeClient.new }
-  let(:some_lib) { instance_spy(SomeLib) } # instance_double can be also used :)
+  let(:some_lib) { instance_double(SomeLib) }
   let(:expected_body) { ... }
   let(:expected_json) { JSON.parse expected_body }
 
   subject { client.request }
 
   it do
+    # call the subject first.
     is_expected.to eq expected_json
-    # Check whether it was really called once expectedly.
+    # set message expectations
+    # call the expectation after calling the subject.
     expect(some_lib).to have_received(:request).with(no_args).and_return(expected_boby).once
   end
 end
 ```
-
----
-
-## instance_double / instance_spy
-
-<br />
-
-- instance_double
-  - Can stub methods.
-  - If you try to stub the undefined method, it would raise an error.
-- instance_spy
-  - Mix stubs and real objects.
-  - If some real method is not stubbed, the real one would be called.
-  - If you try to stub the undefined method, it would raise an error.
 
 ---
 
@@ -209,13 +194,12 @@ end
 
 - stub
   - Provides hard-coded values for method calls.
-  - Always returns the same output, regardless of the input.
-- spy
-  - A stub that records information based on calls.
-  - With spies, we can verify which method was called, with which arguments, when, and how many times.
 - mock
   - mock is similar to stub, but represents the specification of the call at tests.
-  - An exception can be thrown when a call is not expected.
+  - set message expectation -> test
+- spy
+  - test -> verify message expectation
+  - Can write tests more naturally.
 
 ---
 layout: center
