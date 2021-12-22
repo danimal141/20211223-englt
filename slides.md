@@ -75,7 +75,7 @@ layout: center
 
 ---
 
-There is some API client.
+There is some API client wrapper.
 
 <br />
 
